@@ -11,7 +11,7 @@ spring:
       discovery:
         server-addr: 8.140.250.3:8848
   application:
-    name: gulimall-conpon
+    name: gulimall-coupon
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
