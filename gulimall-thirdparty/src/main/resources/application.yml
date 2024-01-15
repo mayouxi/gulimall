@@ -1,0 +1,18 @@
+server:
+  port: 9000
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 8.140.250.3:8848
+  application:
+    name: gulimall-third-party
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+minio:
+  endpoint: http://8.140.250.3:9000 #MinIO服务所在地址
+  bucketName: gulimall #存储桶名称
+  accessKey: fhkladsufhlsafhsa #访问的key
+  secretKey: fasdlfisaojfashfasdlufhdsadfu #访问的秘钥

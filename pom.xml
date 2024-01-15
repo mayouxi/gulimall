@@ -22,7 +22,7 @@
         <module>gulimall-gateway</module>
         <module>gulimall-member</module>
         <module>gulimall-order</module>
-        <module>gulimall-third-party</module>
+        <module>gulimall-thirdparty</module>
         <module>gulimall-ware</module>
     </modules>
 
