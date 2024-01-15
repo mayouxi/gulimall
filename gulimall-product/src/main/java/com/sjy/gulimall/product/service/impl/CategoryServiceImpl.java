@@ -52,7 +52,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {
         List<CategoryEntity> children = all.stream().filter(entity -> {
-            return entity.getParentCid() == root.getCatId();
+            return entity.getParentCid().equals(root.getCatId());
         }).map(child -> {
             child.setChildren(getChildren(child, all));
             return child;
