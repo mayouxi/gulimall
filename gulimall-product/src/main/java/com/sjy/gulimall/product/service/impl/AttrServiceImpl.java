@@ -1,5 +1,6 @@
 package com.sjy.gulimall.product.service.impl;
 
+import com.google.common.collect.Lists;
 import com.sjy.common.constant.ProductConstant;
 import com.sjy.gulimall.product.dao.AttrAttrgroupRelationDao;
 import com.sjy.gulimall.product.dao.AttrGroupDao;
@@ -16,9 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -31,6 +30,7 @@ import com.sjy.gulimall.product.dao.AttrDao;
 import com.sjy.gulimall.product.entity.AttrEntity;
 import com.sjy.gulimall.product.service.AttrService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 
 @Service("attrService")
@@ -160,10 +160,11 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         List<Long> attrIds = relationEntities.stream().map((entity) -> {
             return entity.getAttrId();
         }).collect(Collectors.toList());
-
-        List<AttrEntity> attrEntities = this.baseMapper.selectBatchIds(attrIds);
-
-        return attrEntities;
+        if (CollectionUtils.isEmpty(attrIds)) {
+            return Collections.emptyList();
+        }
+        Collection<AttrEntity> attrEntities = this.listByIds(attrIds);
+        return (List<AttrEntity>) attrEntities;
     }
 
     @Override

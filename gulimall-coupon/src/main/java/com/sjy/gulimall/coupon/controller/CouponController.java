@@ -37,15 +37,6 @@ public class  CouponController {
         coupon.setCouponName("满减");
         return R.ok().put("coupons", coupon);
     }
-    @Value("${coupon.user.name}")
-    String name;
-    @Value("${coupon.user.age}")
-    String age;
-
-    @RequestMapping("/getname")
-    public R getName() {
-        return R.ok().put("name", name).put("age", age);
-    }
 
     /**
      * 列表
