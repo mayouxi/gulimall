@@ -2,13 +2,18 @@ package com.sjy.gulimall.product.controller;
 
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
+import com.sjy.gulimall.product.entity.AttrEntity;
 import com.sjy.gulimall.product.entity.AttrGroupEntity;
+import com.sjy.gulimall.product.service.AttrAttrgroupRelationService;
 import com.sjy.gulimall.product.service.AttrGroupService;
+import com.sjy.gulimall.product.service.AttrService;
 import com.sjy.gulimall.product.service.CategoryService;
+import com.sjy.gulimall.product.vo.AttrGroupRelationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -96,5 +101,39 @@ public class AttrGroupController {
 
         return R.ok();
     }
+
+    @Autowired
+    AttrService attrService;
+
+    @GetMapping("/{attrgroupId}/attr/relation")
+    public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId){
+        List<AttrEntity> data = attrService.getRelationAttr(attrgroupId);
+        return R.ok().put("data", data);
+    }
+
+    @PostMapping("/attr/relation/delete")
+    public R attrRelationDelete(@RequestBody AttrGroupRelationVo[] vos){
+        attrService.deleteRelation(vos);
+        return R.ok();
+    }
+
+    @Autowired
+    AttrAttrgroupRelationService relationService;
+
+    @PostMapping("/attr/relation")
+    public R attrRelation(@RequestBody List<AttrGroupRelationVo> vos){
+        relationService.saveBatch(vos);
+        return R.ok();
+    }
+
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId, @RequestParam Map<String, Object> params){
+        PageUtils page = attrService.getNoRelationAttr(params, attrgroupId);
+        return R.ok().put("page", page);
+    }
+
+
+
+
 
 }
