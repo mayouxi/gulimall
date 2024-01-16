@@ -4,6 +4,7 @@ import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
 import com.sjy.gulimall.product.entity.AttrGroupEntity;
 import com.sjy.gulimall.product.service.AttrGroupService;
+import com.sjy.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,15 +51,21 @@ public class AttrGroupController {
 
 
 
-    /**
-     * 信息
-     */
+    @Autowired
+    private CategoryService categoryService;
+
     @RequestMapping("/info/{attrGroupId}")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
-		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+        AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
 
+        Long catelogId = attrGroup.getCatelogId();
+        //根据id查询完整路径
+        Long[] path = categoryService.findCatelogPath(catelogId);
+
+        attrGroup.setCatelogPath(path);
         return R.ok().put("attrGroup", attrGroup);
     }
+
 
     /**
      * 保存
