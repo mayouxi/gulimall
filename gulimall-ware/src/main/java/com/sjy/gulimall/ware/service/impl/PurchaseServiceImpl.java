@@ -21,6 +21,7 @@ import com.sjy.common.utils.Query;
 import com.sjy.gulimall.ware.dao.PurchaseDao;
 import com.sjy.gulimall.ware.entity.PurchaseEntity;
 import com.sjy.gulimall.ware.service.PurchaseService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("purchaseService")
@@ -77,6 +78,33 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
         }).collect(Collectors.toList());
         detailService.updateBatchById(list);
     }
+
+    @Transactional
+    @Override
+    public void received(List<Long> ids) {
+        // 没有采购需求直接返回，否则会破坏采购单
+        if (ids == null || ids.size() == 0) {
+            return;
+        }
+
+        List<PurchaseEntity> list = this.getBaseMapper().selectBatchIds(ids).stream().filter(entity -> {
+            //确保采购单的状态是新建或者已分配
+            return entity.getStatus() <= WareConstant.PurchaseStatusEnum.ASSIGNED.getCode();
+        }).map(entity -> {
+            //修改采购单的状态为已领取
+            entity.setStatus(WareConstant.PurchaseStatusEnum.RECEIVE.getCode());
+            return entity;
+        }).collect(Collectors.toList());
+        this.updateBatchById(list);
+
+        //修改该采购单下的所有采购需求的状态为正在采购
+        UpdateWrapper<PurchaseDetailEntity> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.in("purchase_id", ids);
+        PurchaseDetailEntity purchaseDetailEntity = new PurchaseDetailEntity();
+        purchaseDetailEntity.setStatus(WareConstant.PurchaseDetailStatusEnum.BUYING.getCode());
+        detailService.update(purchaseDetailEntity, updateWrapper);
+    }
+
 
 
 }

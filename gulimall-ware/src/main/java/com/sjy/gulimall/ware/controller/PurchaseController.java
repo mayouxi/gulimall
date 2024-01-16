@@ -1,6 +1,7 @@
 package com.sjy.gulimall.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.sjy.gulimall.ware.vo.MergeVo;
@@ -92,6 +93,17 @@ public class PurchaseController {
         purchaseService.mergePurchase(mergeVo);
         return R.ok();
     }
+
+    /**
+     * 领取采购单/ware/purchase/received
+     */
+    @PostMapping("/received")
+    //@RequiresPermissions("ware:purchase:list")
+    public R received(@RequestBody List<Long> ids){
+        purchaseService.received(ids);
+        return R.ok();
+    }
+
 
 
 
