@@ -4,6 +4,8 @@ import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
 import com.sjy.gulimall.product.entity.AttrEntity;
 import com.sjy.gulimall.product.service.AttrService;
+import com.sjy.gulimall.product.vo.AttrRespVo;
+import com.sjy.gulimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,17 +43,17 @@ public class AttrController {
      */
     @RequestMapping("/info/{attrId}")
     public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+        AttrRespVo attrRespVo = attrService.getAttrInfo(attrId);
 
-        return R.ok().put("attr", attr);
+        return R.ok().put("attr", attrRespVo);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@RequestBody AttrVo attr){
+		attrService.saveAttr(attr);
 
         return R.ok();
     }
@@ -60,11 +62,12 @@ public class AttrController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    public R update(@RequestBody AttrVo attr){
+        attrService.updateAttr(attr);
 
         return R.ok();
     }
+
 
     /**
      * 删除
@@ -75,5 +78,12 @@ public class AttrController {
 
         return R.ok();
     }
+
+    @RequestMapping("/base/list/{catelogId}")
+    public R baseList(@RequestParam Map<String, Object> params, @PathVariable("catelogId") Long catelogId){
+        PageUtils page = attrService.queryBaseAttrPage(params, catelogId);
+        return R.ok().put("page", page);
+    }
+
 
 }
