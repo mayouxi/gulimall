@@ -1,5 +1,6 @@
 package com.sjy.gulimall.ware.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sjy.common.constant.WareConstant;
 import com.sjy.gulimall.ware.entity.PurchaseDetailEntity;
 import com.sjy.gulimall.ware.service.PurchaseDetailService;
@@ -74,6 +75,7 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
             entity.setPurchaseId(finalPurchaseId);
             return entity;
         }).collect(Collectors.toList());
+        detailService.updateBatchById(list);
     }
 
 
