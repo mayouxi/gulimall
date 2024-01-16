@@ -1,7 +1,10 @@
 package com.sjy.gulimall.product.service.impl;
 
+import com.sjy.gulimall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,6 +18,7 @@ import com.sjy.common.utils.Query;
 import com.sjy.gulimall.product.dao.CategoryDao;
 import com.sjy.gulimall.product.entity.CategoryEntity;
 import com.sjy.gulimall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("categoryService")
@@ -48,6 +52,35 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void removeMenuByIds(List<Long> catIds) {
         //TODO 1、检查当前删除的菜单，是否被别的地方引用
         baseMapper.deleteBatchIds(catIds);
+    }
+
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
+
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+    }
+
+
+    //递归查找父节点id
+    public List<Long> findParentPath(Long catelogId,List<Long> paths){
+        //1、收集当前节点id
+        CategoryEntity byId = this.getById(catelogId);
+        if (byId.getParentCid() != 0){
+            findParentPath(byId.getParentCid(), paths);
+        }
+        paths.add(catelogId);
+        return paths;
     }
 
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {

@@ -61,8 +61,17 @@ public class BrandController {
      */
     @RequestMapping("/update")
     public R update(@RequestBody BrandEntity brand){
-		brandService.updateById(brand);
+		brandService.updateByIdDetail(brand);
 
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update/status")
+    public R updateStatus(@RequestBody BrandEntity brand){
+        brandService.updateById(brand);
         return R.ok();
     }
 
