@@ -1,5 +1,6 @@
 package com.sjy.gulimall.ware.service.impl;
 
+import com.sjy.common.constant.WareConstant;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -25,5 +26,19 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
         return new PageUtils(page);
     }
+
+    @Override
+    public PageUtils queryPageUnreceive(Map<String, Object> params) {
+        QueryWrapper<PurchaseEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", WareConstant.PurchaseStatusEnum.CREATED.getCode()).or().eq("status", WareConstant.PurchaseStatusEnum.ASSIGNED.getCode());
+
+        IPage<PurchaseEntity> page = this.page(
+                new Query<PurchaseEntity>().getPage(params),
+                wrapper
+        );
+
+        return new PageUtils(page);
+    }
+
 
 }
