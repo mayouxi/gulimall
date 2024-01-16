@@ -40,5 +40,23 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         return new PageUtils(page);
     }
 
+    @Override
+    public void addStock(Long skuId, Long wareId, String skuName, Integer skuNum) {
+        WareSkuEntity wareSkuEntity = this.baseMapper.selectOne(new QueryWrapper<WareSkuEntity>().eq("sku_id", skuId).eq("ware_id", wareId));
+        if (wareSkuEntity == null){
+            //新增
+            wareSkuEntity = new WareSkuEntity();
+            wareSkuEntity.setStock(skuNum);
+        }else {
+            wareSkuEntity.setStock(wareSkuEntity.getStock() + skuNum);
+        }
+        wareSkuEntity.setSkuName(skuName);
+        wareSkuEntity.setWareId(wareId);
+        wareSkuEntity.setSkuId(skuId);
+
+        this.saveOrUpdate(wareSkuEntity);
+    }
+
+
 
 }
