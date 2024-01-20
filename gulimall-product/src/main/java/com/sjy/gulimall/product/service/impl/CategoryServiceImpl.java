@@ -7,12 +7,11 @@ import com.sjy.gulimall.product.vo.Catelog2Vo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -88,7 +87,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
         if (StringUtils.isEmpty(catelogJSON)){
             //2.缓存中没有,查询数据库
-            Map<String, List<Catelog2Vo>> catalogJsonFromDb = getCatalogJsonFromDb();
+            Map<String, List<Catelog2Vo>> catalogJsonFromDb = getCatalogJsonFromDbWithRedisLock();
             //3.查到的数据再放入缓存,将对象转为json放在缓存中
             catelogJSON = JSON.toJSONString(catalogJsonFromDb);
             redisTemplate.opsForValue().set("catelogJSON",catelogJSON);
@@ -96,6 +95,50 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Map<String, List<Catelog2Vo>> result = JSON.parseObject(catelogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
         });
         return result;
+    }
+
+    //分布式锁
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
+        // 1、分布式锁。去redis占坑，同时设置过期时间
+
+        //每个线程设置随机的UUID，也可以成为token
+        String uuid = UUID.randomUUID().toString();
+
+        //只有键key不存在的时候才会设置key的值。保证分布式情况下一个锁能进线程
+        Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, 300, TimeUnit.SECONDS);
+//setIfAbsent()如果返回true代表此线程拿到锁；如果返回false代表没拿到锁，就sleep一会递归重试，一直到某一层获取到锁并层层返回redis或数据库结果。
+        if (lock) {
+            // 加锁成功....执行业务【内部会判断一次redis是否有值】
+            System.out.println("获取分布式锁成功....");
+            Map<String, List<Catelog2Vo>> dataFromDB = null;
+            try {
+                dataFromDB = getCatalogJsonFromDb();
+            } finally {
+                // 2、查询UUID是否是自己，是自己的lock就删除
+                // 查询+删除 必须是原子操作：lua脚本解锁
+                String luaScript = "if redis.call('get',KEYS[1]) == ARGV[1]\n" +
+                        "then\n" +
+                        "    return redis.call('del',KEYS[1])\n" +
+                        "else\n" +
+                        "    return 0\n" +
+                        "end";
+                // 删除锁
+                Long lock1 = redisTemplate.execute(
+                        new DefaultRedisScript<Long>(luaScript, Long.class),
+                        Arrays.asList("lock"), uuid);    //把key和value传给lua脚本
+            }
+            return dataFromDB;
+        } else {
+            System.out.println("获取分布式锁失败....等待重试...");
+            // 加锁失败....重试
+            // 休眠100ms重试
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return getCatalogJsonFromDbWithRedisLock();// 自旋的方式
+        }
     }
 
     private Map<String, List<Catelog2Vo>> getCatalogJsonFromDb() {
