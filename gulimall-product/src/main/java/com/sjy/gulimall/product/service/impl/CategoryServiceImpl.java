@@ -1,8 +1,12 @@
 package com.sjy.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.sjy.gulimall.product.service.CategoryBrandRelationService;
 import com.sjy.gulimall.product.vo.Catelog2Vo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -80,6 +84,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        //1. 加入缓存逻辑
+        String catelogJSON = redisTemplate.opsForValue().get("catelogJSON");
+        if (StringUtils.isEmpty(catelogJSON)){
+            //2.缓存中没有,查询数据库
+            Map<String, List<Catelog2Vo>> catalogJsonFromDb = getCatalogJsonFromDb();
+            //3.查到的数据再放入缓存,将对象转为json放在缓存中
+            catelogJSON = JSON.toJSONString(catalogJsonFromDb);
+            redisTemplate.opsForValue().set("catelogJSON",catelogJSON);
+        }
+        Map<String, List<Catelog2Vo>> result = JSON.parseObject(catelogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+        });
+        return result;
+    }
+
+    private Map<String, List<Catelog2Vo>> getCatalogJsonFromDb() {
         List<CategoryEntity> categoryEntities = baseMapper.selectList(null);
         List<CategoryEntity> level1Categories = getListByParentId(categoryEntities, 0L);
         Map<String, List<Catelog2Vo>> collect = level1Categories.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), level1 -> {
@@ -127,5 +146,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }).collect(Collectors.toList());
         return children;
     }
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
 }

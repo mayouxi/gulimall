@@ -31,7 +31,7 @@ public class IndexController {
      * 1级分类作为key，2级引用List
      */
     @ResponseBody
-    @GetMapping("/index/catalog.json")
+    @GetMapping("/index/json/catalog.json")
     public Map<String, List<Catelog2Vo>> getCatalogJson() {
         Map<String, List<Catelog2Vo>> map = categoryService.getCatalogJson();
         return map;
