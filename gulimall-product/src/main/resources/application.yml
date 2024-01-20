@@ -18,6 +18,10 @@ spring:
     cache: false
   resources:
     static-locations: classpath:templates/,classpath:static/
+  redis:
+    host: 8.140.250.3
+    port: 6124
+    password: qwerty123456
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
