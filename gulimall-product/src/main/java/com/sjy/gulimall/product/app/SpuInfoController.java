@@ -5,6 +5,8 @@ import com.sjy.common.utils.R;
 import com.sjy.gulimall.product.entity.SpuInfoEntity;
 import com.sjy.gulimall.product.service.SpuInfoService;
 import com.sjy.gulimall.product.vo.SpuSaveVo;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
