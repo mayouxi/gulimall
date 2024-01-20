@@ -1,12 +1,14 @@
 package com.sjy.gulimall.product.service.impl;
 
 import com.sjy.gulimall.product.service.CategoryBrandRelationService;
+import com.sjy.gulimall.product.vo.Catelog2Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -71,12 +73,43 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
+    @Override
+    public List<CategoryEntity> getLevel1Categorys() {
+        return baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+    }
+
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        List<CategoryEntity> categoryEntities = baseMapper.selectList(null);
+        List<CategoryEntity> level1Categories = getListByParentId(categoryEntities, 0L);
+        Map<String, List<Catelog2Vo>> collect = level1Categories.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), level1 -> {
+            List<CategoryEntity> category2level = getListByParentId(categoryEntities, level1.getCatId());
+            List<Catelog2Vo> catelog2Vos = null;
+            if (category2level != null) {
+                catelog2Vos = category2level.stream().map(level2 -> {
+                    List<CategoryEntity> category3level = getListByParentId(categoryEntities, level2.getCatId());
+                    List<Catelog2Vo.Catelog3Vo> catelog3Vos = null;
+                    if (category3level != null) {
+                        catelog3Vos = category3level.stream().map(level3 -> new Catelog2Vo.Catelog3Vo(level2.getCatId().toString(), level3.getCatId().toString(), level3.getName())).collect(Collectors.toList());
+                    }
+                    return new Catelog2Vo(level1.getCatId().toString(), catelog3Vos, level1.getCatId().toString(), level1.getName());
+                }).collect(Collectors.toList());
+            }
+            return catelog2Vos;
+        }));
+        return collect;
+    }
+
+    public List<CategoryEntity> getListByParentId(List<CategoryEntity> list, Long parent_cid) {
+        return list.stream().filter((item) -> Objects.equals(item.getParentCid(), parent_cid)).collect(Collectors.toList());
+    }
+
 
     //递归查找父节点id
-    public List<Long> findParentPath(Long catelogId,List<Long> paths){
+    public List<Long> findParentPath(Long catelogId, List<Long> paths) {
         //1、收集当前节点id
         CategoryEntity byId = this.getById(catelogId);
-        if (byId.getParentCid() != 0){
+        if (byId.getParentCid() != 0) {
             findParentPath(byId.getParentCid(), paths);
         }
         paths.add(catelogId);
