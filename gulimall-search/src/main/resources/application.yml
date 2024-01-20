@@ -1,0 +1,9 @@
+server:
+  port: 10010
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8849
+  application:
+    name: gulimall-search

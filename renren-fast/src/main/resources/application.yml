@@ -31,7 +31,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 8.140.250.3:8848
+        server-addr: localhost:8849
   application:
     name: renren-fast
 #  resources:
