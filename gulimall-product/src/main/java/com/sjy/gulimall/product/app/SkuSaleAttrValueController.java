@@ -1,9 +1,9 @@
-package com.sjy.gulimall.product.controller;
+package com.sjy.gulimall.product.app;
 
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
-import com.sjy.gulimall.product.entity.SkuImagesEntity;
-import com.sjy.gulimall.product.service.SkuImagesService;
+import com.sjy.gulimall.product.entity.SkuSaleAttrValueEntity;
+import com.sjy.gulimall.product.service.SkuSaleAttrValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,24 +13,24 @@ import java.util.Map;
 
 
 /**
- * skuͼƬ
+ * sku????????&ֵ
  *
  * @author sunjiayang
  * @email 2785631446@qq.com
- * @date 2024-01-14 14:08:57
+ * @date 2024-01-14 14:09:11
  */
 @RestController
-@RequestMapping("product/skuimages")
-public class SkuImagesController {
+@RequestMapping("product/skusaleattrvalue")
+public class SkuSaleAttrValueController {
     @Autowired
-    private SkuImagesService skuImagesService;
+    private SkuSaleAttrValueService skuSaleAttrValueService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = skuImagesService.queryPage(params);
+        PageUtils page = skuSaleAttrValueService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -41,17 +41,17 @@ public class SkuImagesController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		SkuImagesEntity skuImages = skuImagesService.getById(id);
+		SkuSaleAttrValueEntity skuSaleAttrValue = skuSaleAttrValueService.getById(id);
 
-        return R.ok().put("skuImages", skuImages);
+        return R.ok().put("skuSaleAttrValue", skuSaleAttrValue);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SkuImagesEntity skuImages){
-		skuImagesService.save(skuImages);
+    public R save(@RequestBody SkuSaleAttrValueEntity skuSaleAttrValue){
+		skuSaleAttrValueService.save(skuSaleAttrValue);
 
         return R.ok();
     }
@@ -60,8 +60,8 @@ public class SkuImagesController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody SkuImagesEntity skuImages){
-		skuImagesService.updateById(skuImages);
+    public R update(@RequestBody SkuSaleAttrValueEntity skuSaleAttrValue){
+		skuSaleAttrValueService.updateById(skuSaleAttrValue);
 
         return R.ok();
     }
@@ -71,7 +71,7 @@ public class SkuImagesController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		skuImagesService.removeByIds(Arrays.asList(ids));
+		skuSaleAttrValueService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

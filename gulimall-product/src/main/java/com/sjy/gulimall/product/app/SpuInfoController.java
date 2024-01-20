@@ -1,4 +1,4 @@
-package com.sjy.gulimall.product.controller;
+package com.sjy.gulimall.product.app;
 
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
@@ -74,6 +74,16 @@ public class SpuInfoController {
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
 		spuInfoService.removeByIds(Arrays.asList(ids));
+
+        return R.ok();
+    }
+
+    //商品上架
+    ///product/spuinfo/{spuId}/up
+    @PostMapping(value = "/{spuId}/up")
+    public R spuUp(@PathVariable("spuId") Long spuId) {
+
+        spuInfoService.up(spuId);
 
         return R.ok();
     }

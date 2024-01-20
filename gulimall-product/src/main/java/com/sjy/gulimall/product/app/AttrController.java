@@ -1,8 +1,7 @@
-package com.sjy.gulimall.product.controller;
+package com.sjy.gulimall.product.app;
 
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
-import com.sjy.gulimall.product.entity.AttrEntity;
 import com.sjy.gulimall.product.entity.ProductAttrValueEntity;
 import com.sjy.gulimall.product.service.AttrService;
 import com.sjy.gulimall.product.service.ProductAttrValueService;

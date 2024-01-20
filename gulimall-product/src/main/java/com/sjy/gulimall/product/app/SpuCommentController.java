@@ -1,9 +1,9 @@
-package com.sjy.gulimall.product.controller;
+package com.sjy.gulimall.product.app;
 
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
-import com.sjy.gulimall.product.entity.ProductAttrValueEntity;
-import com.sjy.gulimall.product.service.ProductAttrValueService;
+import com.sjy.gulimall.product.entity.SpuCommentEntity;
+import com.sjy.gulimall.product.service.SpuCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,24 +13,24 @@ import java.util.Map;
 
 
 /**
- * spu????ֵ
+ * ??Ʒ???
  *
  * @author sunjiayang
  * @email 2785631446@qq.com
- * @date 2024-01-14 14:08:58
+ * @date 2024-01-14 14:09:09
  */
 @RestController
-@RequestMapping("product/productattrvalue")
-public class ProductAttrValueController {
+@RequestMapping("product/spucomment")
+public class SpuCommentController {
     @Autowired
-    private ProductAttrValueService productAttrValueService;
+    private SpuCommentService spuCommentService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = productAttrValueService.queryPage(params);
+        PageUtils page = spuCommentService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -41,17 +41,17 @@ public class ProductAttrValueController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		ProductAttrValueEntity productAttrValue = productAttrValueService.getById(id);
+		SpuCommentEntity spuComment = spuCommentService.getById(id);
 
-        return R.ok().put("productAttrValue", productAttrValue);
+        return R.ok().put("spuComment", spuComment);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody ProductAttrValueEntity productAttrValue){
-		productAttrValueService.save(productAttrValue);
+    public R save(@RequestBody SpuCommentEntity spuComment){
+		spuCommentService.save(spuComment);
 
         return R.ok();
     }
@@ -60,8 +60,8 @@ public class ProductAttrValueController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody ProductAttrValueEntity productAttrValue){
-		productAttrValueService.updateById(productAttrValue);
+    public R update(@RequestBody SpuCommentEntity spuComment){
+		spuCommentService.updateById(spuComment);
 
         return R.ok();
     }
@@ -71,7 +71,7 @@ public class ProductAttrValueController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		productAttrValueService.removeByIds(Arrays.asList(ids));
+		spuCommentService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

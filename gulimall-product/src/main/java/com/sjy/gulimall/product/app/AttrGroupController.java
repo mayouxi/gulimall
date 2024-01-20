@@ -1,4 +1,4 @@
-package com.sjy.gulimall.product.controller;
+package com.sjy.gulimall.product.app;
 
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
