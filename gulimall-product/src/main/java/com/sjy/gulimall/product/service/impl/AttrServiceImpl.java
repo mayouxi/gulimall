@@ -72,6 +72,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private AttrDao attrDao;
+
     @Override
     public AttrRespVo getAttrInfo(Long attrId) {
         AttrRespVo attrRespVo = new AttrRespVo();
@@ -219,6 +222,17 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return new PageUtils(page);
     }
 
+    @Override
+    public List<Long> selectSearchAttrIds(List<Long> attrIds) {
+//        List<Long> searchAttrIds = this.baseMapper.selectSearchAttrIds(attrIds);
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
+        wrapper.in("attr_id", attrIds).eq("search_type", 1);
+        List<AttrEntity> attrEntities = attrDao.selectList(wrapper);
+        List<Long> attrDao = attrEntities.stream().map((attr -> {
+            return attr.getAttrId();
+        })).collect(Collectors.toList());
+        return attrDao;
+    }
 
 
 }

@@ -13,5 +13,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class GulimallProductApplication {
     public static void main(String[] args) {
         SpringApplication.run(GulimallProductApplication.class, args);
+        System.out.println("启动成功");
     }
 }

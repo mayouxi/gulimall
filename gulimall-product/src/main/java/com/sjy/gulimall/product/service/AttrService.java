@@ -6,6 +6,7 @@ import com.sjy.gulimall.product.entity.AttrEntity;
 import com.sjy.gulimall.product.vo.AttrGroupRelationVo;
 import com.sjy.gulimall.product.vo.AttrRespVo;
 import com.sjy.gulimall.product.vo.AttrVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -35,5 +36,6 @@ public interface AttrService extends IService<AttrEntity> {
 
     PageUtils getNoRelationAttr(Map<String, Object> params, Long attrgroupId);
 
+    List<Long> selectSearchAttrIds(@Param("attrIds") List<Long> attrIds);
 }
 
