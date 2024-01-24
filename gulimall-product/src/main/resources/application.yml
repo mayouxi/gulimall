@@ -31,3 +31,9 @@ mybatis-plus:
       id-type: auto   # 主键自增
       logic-delete-value: 0
       logic-not-delete-value: 1
+# 配置线程池
+gulimall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10

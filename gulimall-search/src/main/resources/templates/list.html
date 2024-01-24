@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/static/search/css/index.css">
-    <link rel="stylesheet" type="text/css" href="/static/searchfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="/static/search/font/iconfont.css">
     <!--<script src="/static/search/js/jquery-3.2.1.min.js"></script>-->
     <script src="/static/search/js/jquery-1.12.4.js"></script>
     <title>Document</title>
@@ -1233,9 +1233,8 @@
                                 <a href="/static/search#">关注</a>
                             </div>
                             <p class="da">
-                                <a href="/static/search#"
-                                   title="购买AppleCare+，获得原厂2年整机保修(含电池)，和多达2次意外损坏的保修服务。购买勾选：保障服务、原厂保2年。">
-                                    <img th:src="${product.getSkuImg()}" class="dim">
+                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|" >
+                                <img th:src="${product.getSkuImg()}" class="dim">
                                 </a>
                             </p>
                             <ul class="tab_im">
