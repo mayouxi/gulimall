@@ -191,7 +191,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                     if (category3level != null) {
                         catelog3Vos = category3level.stream().map(level3 -> new Catelog2Vo.Catelog3Vo(level2.getCatId().toString(), level3.getCatId().toString(), level3.getName())).collect(Collectors.toList());
                     }
-                    return new Catelog2Vo(level1.getCatId().toString(), catelog3Vos, level1.getCatId().toString(), level1.getName());
+                    return new Catelog2Vo(level1.getCatId().toString(), catelog3Vos, level2.getCatId().toString(), level2.getName());
                 }).collect(Collectors.toList());
             }
             return catelog2Vos;

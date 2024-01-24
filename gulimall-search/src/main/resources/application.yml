@@ -7,3 +7,5 @@ spring:
         server-addr: localhost:8849
   application:
     name: gulimall-search
+  thymeleaf:
+    cache: false
