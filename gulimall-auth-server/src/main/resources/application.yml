@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8849
+  application:
+    name: gulimall-auth-server
+  redis:
+    host: 8.140.250.3
+    port: 6124
+    password: qwerty123456
+server:
+  port: 30001
+feign:
+
+  thymeleaf:
+    cache: false

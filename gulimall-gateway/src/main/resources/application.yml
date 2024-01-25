@@ -13,6 +13,15 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+        #认证服务
+        - id: gulimall_auth_host
+          uri: lb://gulimall-auth-server
+          predicates:
+            - Host=auth.gulimall.com
+        - id: gulimall_cart_route
+          uri: lb://gulimall-cart
+          predicates:
+            - Host=cart.gulimall.com
         - id: third_party_route
           uri: lb://gulimall-third-party
           predicates:

@@ -1,0 +1,19 @@
+server:
+  port: 30002
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8849
+  application:
+    name: gulimall-cart
+  redis:
+    host: 8.140.250.3
+    port: 6124
+    password: qwerty123456
+# 配置线程池
+gulimall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
