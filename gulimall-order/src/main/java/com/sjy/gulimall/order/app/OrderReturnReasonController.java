@@ -1,4 +1,4 @@
-package com.sjy.gulimall.order.controller;
+package com.sjy.gulimall.order.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sjy.gulimall.order.entity.OrderOperateHistoryEntity;
-import com.sjy.gulimall.order.service.OrderOperateHistoryService;
+import com.sjy.gulimall.order.entity.OrderReturnReasonEntity;
+import com.sjy.gulimall.order.service.OrderReturnReasonService;
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
 
 
 
 /**
- * ??????????ʷ??¼
+ * ?˻?ԭ?
  *
  * @author sunjiayang
  * @email 2785631446@qq.com
- * @date 2024-01-14 15:14:45
+ * @date 2024-01-14 15:14:43
  */
 @RestController
-@RequestMapping("order/orderoperatehistory")
-public class OrderOperateHistoryController {
+@RequestMapping("order/orderreturnreason")
+public class OrderReturnReasonController {
     @Autowired
-    private OrderOperateHistoryService orderOperateHistoryService;
+    private OrderReturnReasonService orderReturnReasonService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = orderOperateHistoryService.queryPage(params);
+        PageUtils page = orderReturnReasonService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -46,17 +46,17 @@ public class OrderOperateHistoryController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		OrderOperateHistoryEntity orderOperateHistory = orderOperateHistoryService.getById(id);
+		OrderReturnReasonEntity orderReturnReason = orderReturnReasonService.getById(id);
 
-        return R.ok().put("orderOperateHistory", orderOperateHistory);
+        return R.ok().put("orderReturnReason", orderReturnReason);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody OrderOperateHistoryEntity orderOperateHistory){
-		orderOperateHistoryService.save(orderOperateHistory);
+    public R save(@RequestBody OrderReturnReasonEntity orderReturnReason){
+		orderReturnReasonService.save(orderReturnReason);
 
         return R.ok();
     }
@@ -65,8 +65,8 @@ public class OrderOperateHistoryController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody OrderOperateHistoryEntity orderOperateHistory){
-		orderOperateHistoryService.updateById(orderOperateHistory);
+    public R update(@RequestBody OrderReturnReasonEntity orderReturnReason){
+		orderReturnReasonService.updateById(orderReturnReason);
 
         return R.ok();
     }
@@ -76,7 +76,7 @@ public class OrderOperateHistoryController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		orderOperateHistoryService.removeByIds(Arrays.asList(ids));
+		orderReturnReasonService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

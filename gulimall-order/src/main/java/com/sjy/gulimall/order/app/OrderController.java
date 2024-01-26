@@ -1,4 +1,4 @@
-package com.sjy.gulimall.order.controller;
+package com.sjy.gulimall.order.app;
 
 import java.util.Arrays;
 import java.util.Map;

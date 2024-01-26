@@ -1,4 +1,4 @@
-package com.sjy.gulimall.order.controller;
+package com.sjy.gulimall.order.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sjy.gulimall.order.entity.PaymentInfoEntity;
-import com.sjy.gulimall.order.service.PaymentInfoService;
+import com.sjy.gulimall.order.entity.OrderReturnApplyEntity;
+import com.sjy.gulimall.order.service.OrderReturnApplyService;
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
 
 
 
 /**
- * ֧????Ϣ?
+ * ?????˻????
  *
  * @author sunjiayang
  * @email 2785631446@qq.com
- * @date 2024-01-14 15:14:41
+ * @date 2024-01-14 15:14:44
  */
 @RestController
-@RequestMapping("order/paymentinfo")
-public class PaymentInfoController {
+@RequestMapping("order/orderreturnapply")
+public class OrderReturnApplyController {
     @Autowired
-    private PaymentInfoService paymentInfoService;
+    private OrderReturnApplyService orderReturnApplyService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = paymentInfoService.queryPage(params);
+        PageUtils page = orderReturnApplyService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -46,17 +46,17 @@ public class PaymentInfoController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		PaymentInfoEntity paymentInfo = paymentInfoService.getById(id);
+		OrderReturnApplyEntity orderReturnApply = orderReturnApplyService.getById(id);
 
-        return R.ok().put("paymentInfo", paymentInfo);
+        return R.ok().put("orderReturnApply", orderReturnApply);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody PaymentInfoEntity paymentInfo){
-		paymentInfoService.save(paymentInfo);
+    public R save(@RequestBody OrderReturnApplyEntity orderReturnApply){
+		orderReturnApplyService.save(orderReturnApply);
 
         return R.ok();
     }
@@ -65,8 +65,8 @@ public class PaymentInfoController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody PaymentInfoEntity paymentInfo){
-		paymentInfoService.updateById(paymentInfo);
+    public R update(@RequestBody OrderReturnApplyEntity orderReturnApply){
+		orderReturnApplyService.updateById(orderReturnApply);
 
         return R.ok();
     }
@@ -76,7 +76,7 @@ public class PaymentInfoController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		paymentInfoService.removeByIds(Arrays.asList(ids));
+		orderReturnApplyService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

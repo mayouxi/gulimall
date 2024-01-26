@@ -1,4 +1,4 @@
-package com.sjy.gulimall.order.controller;
+package com.sjy.gulimall.order.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sjy.gulimall.order.entity.OrderSettingEntity;
-import com.sjy.gulimall.order.service.OrderSettingService;
+import com.sjy.gulimall.order.entity.OrderItemEntity;
+import com.sjy.gulimall.order.service.OrderItemService;
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.R;
 
 
 
 /**
- * ??????????Ϣ
+ * ????????Ϣ
  *
  * @author sunjiayang
  * @email 2785631446@qq.com
- * @date 2024-01-14 15:14:42
+ * @date 2024-01-14 15:14:46
  */
 @RestController
-@RequestMapping("order/ordersetting")
-public class OrderSettingController {
+@RequestMapping("order/orderitem")
+public class OrderItemController {
     @Autowired
-    private OrderSettingService orderSettingService;
+    private OrderItemService orderItemService;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = orderSettingService.queryPage(params);
+        PageUtils page = orderItemService.queryPage(params);
 
         return R.ok().put("page", page);
     }
@@ -46,17 +46,17 @@ public class OrderSettingController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-		OrderSettingEntity orderSetting = orderSettingService.getById(id);
+		OrderItemEntity orderItem = orderItemService.getById(id);
 
-        return R.ok().put("orderSetting", orderSetting);
+        return R.ok().put("orderItem", orderItem);
     }
 
     /**
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody OrderSettingEntity orderSetting){
-		orderSettingService.save(orderSetting);
+    public R save(@RequestBody OrderItemEntity orderItem){
+		orderItemService.save(orderItem);
 
         return R.ok();
     }
@@ -65,8 +65,8 @@ public class OrderSettingController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody OrderSettingEntity orderSetting){
-		orderSettingService.updateById(orderSetting);
+    public R update(@RequestBody OrderItemEntity orderItem){
+		orderItemService.updateById(orderItem);
 
         return R.ok();
     }
@@ -76,7 +76,7 @@ public class OrderSettingController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-		orderSettingService.removeByIds(Arrays.asList(ids));
+		orderItemService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

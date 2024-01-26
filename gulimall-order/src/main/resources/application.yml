@@ -10,10 +10,23 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8849
+  redis:
+    host: 8.140.250.3
+    port: 6124
+    password: qwerty123456
+  session:
+    store-type: redis
   application:
     name: gulimall-order
+  thymeleaf:
+    cache: false
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto   # 主键自增
+gulimall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
