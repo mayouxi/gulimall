@@ -90,7 +90,7 @@
 					</ul>
 					<h5 class="rig">
 						<img src="/static/login/JD_img/4de5019d2404d347897dee637895d02b_25.png" />
-						<span><a href="http://auth.gulimall.com/reg">立即注册</a></span>
+						<span><a href="http://auth.gulimall.com/reg.html">立即注册</a></span>
 					</h5>
 				</div>
 			</div>
@@ -157,7 +157,7 @@
 				err_img1.src = 'JD_img/img11.png';
 				err_img2.src = 'JD_img/img22.png';
 			} else {
-				var a = document.getElementsByClassName("a")[0].href = "http://www.baidu.com";
+				var a = document.getElementsByClassName("a")[0].href = 'http://auth.gulimall.com/login/' + user.value + '/' + pass.value;
 			}
 			user.onfocus = function() {
 				err_img1.src = 'JD_img/grow1.png';

@@ -13,7 +13,7 @@ public class GulimallWebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
 //将请求"/login.html"映射到"login"页面
-         registry.addViewController("/login.html").setViewName("login");
+//         registry.addViewController("/login.html").setViewName("login");
         registry.addViewController("/reg.html").setViewName("reg");
     }
 }

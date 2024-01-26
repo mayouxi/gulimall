@@ -11,6 +11,10 @@ spring:
     password: qwerty123456
 server:
   port: 30001
+  servlet:
+    #配置session过期时间
+    session:
+      timeout: 30m
 feign:
 
   thymeleaf:

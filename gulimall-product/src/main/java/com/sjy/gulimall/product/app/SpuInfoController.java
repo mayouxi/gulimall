@@ -90,4 +90,15 @@ public class SpuInfoController {
         return R.ok();
     }
 
+    /**
+     * 查询指定sku的spu信息,用于生成订单
+     * @param skuId
+     * @return
+     */
+    @GetMapping("/skuId/{id}")
+    public R getSpuInfoBySkuId(@PathVariable("id") Long skuId) {
+        SpuInfoEntity entity = spuInfoService.getSpuInfoBySkuId(skuId);
+        return R.ok().setData(entity);
+    }
+
 }

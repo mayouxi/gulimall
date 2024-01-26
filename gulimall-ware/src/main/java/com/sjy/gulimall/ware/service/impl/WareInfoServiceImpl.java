@@ -1,8 +1,15 @@
 package com.sjy.gulimall.ware.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.mysql.cj.util.StringUtils;
+import com.sjy.common.to.MemberAddressVo;
+import com.sjy.common.utils.R;
+import com.sjy.gulimall.ware.feign.MemberFeignService;
+import com.sjy.gulimall.ware.vo.FareVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -45,5 +52,26 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
         return new PageUtils(page);
     }
 
+    @Override
+    public FareVo getFare(Long addrId) {
+        FareVo fareVo = new FareVo();
+        R r = memberFeignService.addrInfo(addrId);
+        MemberAddressVo data = r.getData("memberReceiveAddress", new TypeReference<MemberAddressVo>() {
+        });
+        if (data != null) {
+            // 简单处理：截取手机号最后一位作为邮费
+            String phone = data.getPhone();
+            String substring = phone.substring(phone.length() - 1, phone.length());
+            BigDecimal bigDecimal = new BigDecimal(substring);
+            fareVo.setAddressVo(data);
+            fareVo.setFare(bigDecimal);
+            return fareVo;
+        }
+        return null;
+    }
+
+
+    @Autowired
+    MemberFeignService memberFeignService;
 
 }

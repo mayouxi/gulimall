@@ -115,8 +115,9 @@ public class LoginController {
      *                           整合了SpringSession，扩大了session作用域到"gulimall.com"，解决了session共享问题，
      * @return 路由到的页面，不加@ResponseBody，防止返回值是字符串
      */
-    @PostMapping(value = "/login")
-    public String login(UserLoginVo vo, RedirectAttributes attributes, HttpSession session) {
+    @GetMapping(value = "/login/{username}/{password}")
+    public String login(@PathVariable("username") String username,@PathVariable("password") String password, RedirectAttributes attributes, HttpSession session) {
+        UserLoginVo vo = new UserLoginVo(username, password);
         //远程登录
         R login = memberFeignService.login(vo);
 
@@ -145,6 +146,7 @@ public class LoginController {
         if (attribute == null) {
             return "login";
         } else {
+            System.out.println(attribute);
             return "redirect:http://gulimall.com";
         }
 

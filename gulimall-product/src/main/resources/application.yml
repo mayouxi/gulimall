@@ -1,5 +1,9 @@
 server:
   port: 10000
+  servlet:
+    #配置session过期时间
+    session:
+      timeout: 30m
 spring:
   datasource:
     username: root
@@ -10,6 +14,9 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8849
+    alibaba:
+      seata:
+        tx-service-group: gulimall-product
   application:
     name: gulimall-product
   jackson:
@@ -24,6 +31,8 @@ spring:
     password: qwerty123456
   cache:
     type: redis
+  session:
+    store-type: redis
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
@@ -37,3 +46,5 @@ gulimall:
     core-size: 20
     max-size: 200
     keep-alive-time: 10
+seata:
+  data-source-proxy-mode: AT # 默认就是AT

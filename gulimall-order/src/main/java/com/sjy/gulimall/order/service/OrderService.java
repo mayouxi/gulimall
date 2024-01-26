@@ -3,8 +3,12 @@ package com.sjy.gulimall.order.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sjy.common.utils.PageUtils;
 import com.sjy.gulimall.order.entity.OrderEntity;
+import com.sjy.gulimall.order.vo.OrderConfirmVo;
+import com.sjy.gulimall.order.vo.OrderSubmitVo;
+import com.sjy.gulimall.order.vo.SubmitOrderResponseVo;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * ????
@@ -16,5 +20,13 @@ import java.util.Map;
 public interface OrderService extends IService<OrderEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    OrderConfirmVo confirmOrder() throws ExecutionException, InterruptedException;
+
+    SubmitOrderResponseVo submitOrder(OrderSubmitVo vo);
+
+    OrderEntity getOrderByOrderSn(String orderSn);
+
+    void closeOrder(OrderEntity entity);
 }
 
