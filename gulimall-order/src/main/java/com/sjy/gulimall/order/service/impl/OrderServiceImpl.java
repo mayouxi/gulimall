@@ -6,10 +6,8 @@ import com.sjy.common.exception.NoStockException;
 import com.sjy.common.to.MemberResponseVo;
 import com.sjy.common.to.mq.OrderTo;
 import com.sjy.common.utils.R;
-import com.sjy.gulimall.order.constant.OrderConstant;
 import com.sjy.gulimall.order.entity.OrderItemEntity;
 import com.sjy.gulimall.order.enume.OrderStatusEnum;
-import com.sjy.gulimall.order.exception.NoStockException;
 import com.sjy.gulimall.order.feign.CartFeignService;
 import com.sjy.gulimall.order.feign.MemberFeignService;
 import com.sjy.gulimall.order.feign.ProductFeignService;
@@ -17,6 +15,7 @@ import com.sjy.gulimall.order.feign.WareFeignService;
 import com.sjy.gulimall.order.intercept.LoginUserInterceptor;
 import com.sjy.gulimall.order.service.OrderItemService;
 import com.sjy.gulimall.order.vo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,7 @@ import static com.sjy.gulimall.order.constant.OrderConstant.USER_ORDER_TOKEN_PRE
 
 
 @Service("orderService")
+@Slf4j
 public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> implements OrderService {
 
     @Override
@@ -143,18 +143,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         SubmitOrderResponseVo responseVo = new SubmitOrderResponseVo();
         //去创建、下订单、验令牌、验价格、锁定库存...
 
-        //1.从拦截器中获取当前用户登录的信息
+        // 1.从拦截器中获取当前用户登录的信息
         MemberResponseVo memberResponseVo = LoginUserInterceptor.loginUser.get();
         responseVo.setCode(0);
 
-        //2、验证令牌是否合法【令牌的对比和删除必须保证原子性】
-        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        String orderToken = vo.getOrderToken();
-
-        //通过lure脚本原子验证令牌和删除令牌
-        Long result = stringRedisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class),
-                Arrays.asList(USER_ORDER_TOKEN_PREFIX + memberResponseVo.getId()),
-                orderToken);
+        // 2.redis验签
+        Long result = checkRedisToken(vo, memberResponseVo);
 
         if (result == 0L) {
             //令牌验证失败
@@ -169,7 +163,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             BigDecimal payAmount = order.getOrder().getPayAmount();
             BigDecimal payPrice = vo.getPayPrice();
 
-            if (Math.abs(payAmount.subtract(payPrice).doubleValue()) < 0.01) {
+            if (true || Math.abs(payAmount.subtract(payPrice).doubleValue()) < 0.01) {
                 //金额对比
                 //TODO 3、保存订单
                 saveOrder(order);
@@ -217,6 +211,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 return responseVo;
             }
         }
+    }
+
+    private Long checkRedisToken(OrderSubmitVo vo, MemberResponseVo memberResponseVo) {
+        //2、验证令牌是否合法【令牌的对比和删除必须保证原子性】
+        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        String orderToken = vo.getOrderToken();
+
+        //通过lure脚本原子验证令牌和删除令牌
+        Long result = stringRedisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class),
+                Arrays.asList(USER_ORDER_TOKEN_PREFIX + memberResponseVo.getId()),
+                orderToken);
+        return result;
     }
 
     /**

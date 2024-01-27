@@ -10,6 +10,9 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8849
+    alibaba:
+      seata:
+        tx-service-group:
   redis:
     host: 8.140.250.3
     port: 6124
@@ -30,3 +33,11 @@ gulimall:
     core-size: 20
     max-size: 200
     keep-alive-time: 10
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 600000
+        readTimeout: 600000
+  hystrix:
+    enabled: false

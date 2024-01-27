@@ -13,7 +13,7 @@ import java.util.List;
 @FeignClient("gulimall-ware")
 public interface WareFeignService {
  
-    @PostMapping("/ware/waresku/hasstock")
+    @PostMapping("/ware/waresku/hasStock")
     R getSkusHasStock(@RequestBody List<Long> skuIds);
 
 

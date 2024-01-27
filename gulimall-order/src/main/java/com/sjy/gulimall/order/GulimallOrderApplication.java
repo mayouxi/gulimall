@@ -10,7 +10,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @MapperScan("com.sjy.gulimall.order.dao")
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.sjy.gulimall.order.feign")
 @EnableRedisHttpSession  //整合Redis作为session存储
 public class GulimallOrderApplication {
     public static void main(String[] args) {

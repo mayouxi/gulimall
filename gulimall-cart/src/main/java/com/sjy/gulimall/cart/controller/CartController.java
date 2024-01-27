@@ -1,5 +1,6 @@
 package com.sjy.gulimall.cart.controller;
 
+import com.mysql.cj.log.Log;
 import com.sjy.gulimall.cart.Service.CartService;
 import com.sjy.gulimall.cart.intercept.CartInterceptor;
 import com.sjy.gulimall.cart.vo.CartItemVo;
@@ -99,7 +100,9 @@ public class CartController {
     @GetMapping("/currentUserCartItems")
     @ResponseBody
     public List<CartItemVo> getCurrentUserCartItems(){
-        return cartService.getUserCartItems();
+        List<CartItemVo> userCartItems = cartService.getUserCartItems();
+        System.out.println("@@@@" + userCartItems.get(0).getSkuId());
+        return userCartItems;
     }
 
 

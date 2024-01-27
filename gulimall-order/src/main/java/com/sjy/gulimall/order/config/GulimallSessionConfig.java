@@ -15,10 +15,11 @@ public class GulimallSessionConfig {
         //放大作用域
         cookieSerializer.setDomainName("gulimall.com");
         cookieSerializer.setCookieName("GULISESSION");
-        cookieSerializer.setCookieMaxAge(60*60*24*7);
+        cookieSerializer.setCookieMaxAge(60 * 60 * 24 * 7);
         return cookieSerializer;
     }
-	//session存储对象方式json,默认jdk
+
+    //session存储对象方式json,默认jdk
     @Bean
     public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
         return new GenericJackson2JsonRedisSerializer();
