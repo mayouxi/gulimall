@@ -1,6 +1,7 @@
 package com.sjy.gulimall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sjy.common.to.mq.SeckillOrderTo;
 import com.sjy.common.utils.PageUtils;
 import com.sjy.gulimall.order.entity.OrderEntity;
 import com.sjy.gulimall.order.vo.OrderConfirmVo;
@@ -28,5 +29,7 @@ public interface OrderService extends IService<OrderEntity> {
     OrderEntity getOrderByOrderSn(String orderSn);
 
     void closeOrder(OrderEntity entity);
+
+    void createSeckillOrder(SeckillOrderTo orderTo);
 }
 

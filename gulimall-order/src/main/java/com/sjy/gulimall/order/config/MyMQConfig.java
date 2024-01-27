@@ -39,6 +39,16 @@ public class MyMQConfig {
     public Queue orderReleaseOrderQueue(){
         return new Queue("order.release.order.queue", true, false, false);
     }
+
+    /**
+     * 商品秒杀队列
+     * 作用：削峰，创建订单
+     */
+    @Bean
+    public Queue orderSecKillOrderQueue() {
+        Queue queue = new Queue("order.seckill.order.queue", true, false, false);
+        return queue;
+    }
  
     @Bean
     public Exchange orderEventExchange(){
@@ -78,6 +88,20 @@ public class MyMQConfig {
                 "order-event-exchange",
                 "order.release.other.#",
                 null);
+    }
+
+    @Bean
+    public Binding orderSecKillOrderQueueBinding() {
+        //String destination, DestinationType destinationType, String exchange, String routingKey,
+        // 			Map<String, Object> arguments
+        Binding binding = new Binding(
+                "order.seckill.order.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.seckill.order",
+                null);
+
+        return binding;
     }
  
 }

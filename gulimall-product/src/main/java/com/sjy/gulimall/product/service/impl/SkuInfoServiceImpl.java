@@ -1,8 +1,11 @@
 package com.sjy.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.sjy.gulimall.product.entity.SkuImagesEntity;
 import com.sjy.gulimall.product.entity.SpuInfoDescEntity;
+import com.sjy.gulimall.product.feign.SeckillFeignService;
 import com.sjy.gulimall.product.service.*;
+import com.sjy.gulimall.product.vo.SeckillSkuVo;
 import com.sjy.gulimall.product.vo.SkuItemSaleAttrVo;
 import com.sjy.gulimall.product.vo.SkuItemVo;
 import com.sjy.gulimall.product.vo.SpuItemAttrGroupVo;
@@ -21,6 +24,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sjy.common.utils.PageUtils;
 import com.sjy.common.utils.Query;
+import com.sjy.common.utils.R;
 
 import com.sjy.gulimall.product.dao.SkuInfoDao;
 import com.sjy.gulimall.product.entity.SkuInfoEntity;
@@ -139,10 +143,29 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             skuItemVo.setImages(images);
         }, executor);
 
+        // 3、查询当前sku是否参与秒杀活动
+        CompletableFuture<Void> seckillFuture = CompletableFuture.runAsync(() -> {
+            //3、远程调用查询当前sku是否参与秒杀优惠活动
+            R skuSeckilInfo = seckillFeignService.getSkuSeckilInfo(skuId);
+            if (skuSeckilInfo.getCode() == 0) {
+                //查询成功
+                SeckillSkuVo seckilInfoData = skuSeckilInfo.getData("data", new TypeReference<SeckillSkuVo>() {
+                });
+                skuItemVo.setSeckillSkuVo(seckilInfoData);
+
+                if (seckilInfoData != null) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime > seckilInfoData.getEndTime()) {
+                        skuItemVo.setSeckillSkuVo(null);
+                    }
+                }
+            }
+        }, executor);
+
 
         // 等待所有任务都完成
 //多任务组合,allOf等待所有任务完成。这里就不需要加infoFuture，因为依赖于它结果的saleAttrFuture等都完成了，它肯定也完成了。
-        CompletableFuture.allOf(saleAttrFuture, descFuture, baseAttrFuture, imageFuture).get();
+        CompletableFuture.allOf(saleAttrFuture, descFuture, baseAttrFuture, imageFuture, seckillFuture).get();
 
         return skuItemVo;
     }
@@ -157,5 +180,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     AttrGroupService attrGroupService;
     @Autowired
     ThreadPoolExecutor executor;
+    @Autowired
+    SeckillFeignService seckillFeignService;
 
 }
